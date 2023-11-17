@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "highlight.js": "^11.9.0",
     "marked": "^9.1.5",
-    "prismjs": "^1.29.0",
+    "marked-highlight": "^2.0.7",
+    "npm": "^10.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

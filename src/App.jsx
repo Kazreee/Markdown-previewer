@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { marked } from 'marked';
-import Prism from 'prismjs'
+import { Marked } from "marked";
+import {markedHighlight} from "marked-highlight";
+import hljs from 'highlight.js';
 
 const defaultMarkText = `
 # Welcome to my React Markdown Previewer!
@@ -48,16 +49,24 @@ And here. | Okay. | I think we get it.
 ![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
 
 `
-
-marked.setOptions({
-  breaks: true,
-  highlight: function(code) {
-    Prism.highlight(code, Prism.languages.javascript, 'javascript')
-  }})
-
 function App() {
 
   const [input, setInput] = useState(defaultMarkText);
+
+  const marked = new Marked(
+    markedHighlight({
+      langPrefix: 'hljs language-',
+      highlight(code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+        return hljs.highlight(code, { language }).value;
+      }
+    })
+  );
+
+  marked.use({ breaks: true })
+  const styledText = input.replace(/\n```([\s\S]*?)\n```/g, (match, code) => {
+    return `\n\`\`\`javascript${code}\n\`\`\``;
+  });
 
 
   return (
@@ -65,24 +74,24 @@ function App() {
       <div className="editor-container">
         <div className="container">
           <div className="logo">
-            <i class="fa-brands fa-free-code-camp"></i>
+            <i className="fa-brands fa-free-code-camp"></i>
             <h4>Editor</h4>
           </div>
-          <i class="fa-solid fa-x"></i>
+          <i className="fa-solid fa-x"></i>
         </div>
-        <textarea id='editor' value={input} onChange={(e) => setInput(e.target.value)}></textarea>
+        <textarea id='editor' value={input} onChange={
+          (e) => setInput(e.target.value)
+          }></textarea>
       </div>
       <div className="preview-container">
         <div className="container">
           <div className="logo">
-            <i class="fa-brands fa-free-code-camp"></i>
+            <i className="fa-brands fa-free-code-camp"></i>
             <h4>Preview</h4>
           </div>
-          <i class="fa-solid fa-x"></i>
+          <i className="fa-solid fa-x"></i>
         </div>
-        <div id='preview' dangerouslySetInnerHTML={{
-          __html: marked(input)
-        }}></div>
+        <div id='preview' dangerouslySetInnerHTML={{__html: marked.parse(styledText)}}></div>
       </div>
     </>
   )

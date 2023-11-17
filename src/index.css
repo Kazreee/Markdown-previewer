@@ -33,11 +33,6 @@ tr {
   padding: 0 5px;
 }
 
-code,
-pre {
-  background-color: white;
-}
-
 body {
   background-color: #87b5b5;
   display: flex;
@@ -68,6 +63,12 @@ body {
   min-height: 150px;
   width: 800px;
   padding: 20px;
+}
+
+#preview code {
+  background: white;
+  font-size: 0.875rem;
+  font-weight: bold;
 }
 
 .container {
